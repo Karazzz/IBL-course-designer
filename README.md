@@ -1,237 +1,149 @@
 # IBL Course Designer
 
-面向腾讯云 ADP Claw 模式和微信客服的 AI × 研究性学习课程设计 Skill。它先与教师确认整套课程还是单节课，逐步补齐信息，先交付框架；教师确认后，再生成整套课程方案，或生成可直接使用的单节教案、手绘漫画风 PPT、逐环节学生留痕物料和教师工具包。
+> 项目制学习/研究性学习课程设计Skill。把教师的模糊想法变成直接能用的教案和学生留痕物料
 
-## 目录
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+![Python 3.10+](https://img.shields.io/badge/Python-3.10+-3776AB.svg)
+![ZIP ~17KB](https://img.shields.io/badge/ZIP-~17KB-brightgreen.svg)
+![Platform](https://img.shields.io/badge/Platform-ADP_Claw-0083FE.svg)
+![Version](https://img.shields.io/badge/Version-2.0.1-0BB8B8.svg)
 
-```text
-SKILL.md                         ADP Skill 入口
-references/                      Skill 按需加载的纯文本规范
-scripts/validate_skill.py        Skill/ZIP 自动校验
-scripts/package_skill.py         确定性 ZIP 打包
-scripts/adp_client.py            ADP Claw 生命周期与验收客户端
-config/agent-instructions.txt    主 Agent 指令
-config/acceptance-cases.json     微信多轮验收用例
-deploy/nginx/                    HTTPS 反向代理模板
-ops/                             渲染、部署、检查、备份、回滚脚本
-docs/manual-steps.md             必须人工完成的控制台步骤
-dist/                            生成的 Skill ZIP
-```
+---
 
-根目录两份 DOCX 和 PPTX 是设计参考，不会进入 Skill ZIP。ADP 包只包含根目录 `SKILL.md` 和 `references/*.md`，符合仅允许纯文本的限制。
+## 这是什么
+IBL Course Designer是一个面向中小学教师的AI x 研究性学习（Inquiry-Based Learning）和项目制学习（Project-Based Learning）课程设计skill。教师只需要用自然语言描述一个初步想法（例如：我想设计一个ESP32智能农场的项目），skill便会与教师确认课程尺度、学生年龄、课时数量、场地设备、材料预算、AI使用方式和最终成果等关键条件，形成一份待确认的课程框架。教师确认后，skill将继续生成一套可以直接进入教学实施的课程资源，详见下方详细能力章节。它遵循研究性学习与研究性学习的基本方法，确保学生经历提出问题 → 建立假设 → 设计实验 → 收集证据 → 使用AI辅助分析 → 核验结果 → 形成结论 → 展示与反思的完整过程。
 
-## 环境要求
+## 为什么需要这个skill
+近年来，项目化学习、跨学科学习和科学探究正在从少数学校的特色探索，逐渐变成义务教育阶段需要常态化落实的教学任务。2021年，“双减”后的课后服务全面推行“5+2”模式。《义务教育课程方案和课程标准（2022年版）》要求，原则上各门课程使用不少于 10% 的课时开展跨学科主题学习。2023年，教育部等十八部门提出在“双减”中做好科学教育加法。2025年发布的《中小学科学教育工作指南》进一步强化了课程实施、探究实践、教师队伍、过程评价和档案管理要求。2026年8月，教育部发布义务教育阶段科学教育“做中学”领航行动指南，要求围绕真实问题开展跨学科探究实践。其中，四至九年级每名学生每学期应完成不少于一项、且不少于四课时的科学探究任务。
+政策已经回答了“学校要不要开展研究性、跨学科探究课程”的问题，但没有回答“普通教师如何在有限的备课时间、材料、设备和专业背景下，把这些要求转化为一门真正能够上起来的课程？”
+经过调查，我们发现，教师面临的困难通常不是想不到一个有趣主题，而是不知道怎样把主题转化为可研究的问题、不知道如何评价开放性的学生成果、需要花费大量时间制作教学物料。通用AI工具给出的内容看似丰富，却经常缺少真实实验和教学可行性。IBL Course Designer的目标，就是补上从政策要求和课程想法到真实课堂实施之间的这段空白。
 
-- Python 3.10+；无第三方 Python 依赖；
-- 本地可在 Windows、macOS 或 Linux 校验、打包和调用 ADP API；
-- Nginx 部署脚本面向 Linux，要求 Nginx 1.18+、`python3`、`curl`；
-- 线上需要腾讯云/ADP、企业微信、微信客服、已备案域名和 HTTPS 证书。
+## IBL Course Designer适合谁
+- 需要设计跨学科主题学习的学科教师；
+- 承担科学社团、兴趣班或课后服务课程的教师；
+- 需要开发项目化学习课程的教研员和课程负责人；
+- 需要建设校本课程、科技节或综合实践课程的学校；
+- 希望把AI引入课堂，但不希望学生只用 AI 搜答案的教师。
 
-## 1. 本地校验与测试
+## 效果展示
+
+<!-- TODO: 替换为实际截图。删除 docs/images/README-SCREENSHOTS.md 后此注释可移除 -->
+<p align="center">
+  <img src="docs/images/demo-conversation.png" width="600" alt="教师对话示例" />
+  <br />
+  <sub>教师对话 → 框架确认 → 生成完整教案、PPT 和学生物料</sub>
+</p>
+
+<p align="center">
+  <img src="docs/images/demo-ppt.png" width="600" alt="手绘漫画风 PPT 示例" />
+  <br />
+  <sub>当节课 PPT：手绘漫画风、对话气泡、计时挑战页、AI 核验提示</sub>
+</p>
+
+<p align="center">
+  <img src="docs/images/demo-materials.png" width="600" alt="学生物料示例" />
+  <br />
+  <sub>部分学生留痕物料：共情地图、变量桌垫、AI 核验单、失败侦探单</sub>
+</p>
+
+
+## Skill 详细能力
+
+### 先搜索，再设计
+
+在生成任何课程内容之前，自动搜索课标、已有课程案例、真实实验数据、材料规格和已有物料模板。确保课程有据可查，教师可以据此判断设计是否靠谱。
+
+### 设计整套课程时的产出
+
+1. **课程定位与简介** — 年级、节次、时长、主问题、最终项目
+2. **适合学生** — 基础、兴趣画像、前置知识、不适合情形
+3. **五类可评价目标** — 研究思维、实验设计、AI 协同、工具技能、协作表达
+4. **模块总览与逐节课表** — 每节写明课题、研究方法、动手任务、AI 任务、引导问题、留痕物料
+5. **结营成果系统** — 个人实体成果、小组成果、班级展示、过程档案
+6. **评价设计** — 诊断/形成性/总结性检查点，4 级表现量规
+7. **材料与设备清单** — 公共设备、每组材料、逐节消耗品、数量公式、替代方案
+8. **课前准备时间线** — 开课前 2-4 周到结营展示
+9. **实施保障** — 设备排队、无障碍、低网络、缺席补做方案
+10. **课程质量自检** — 10 项逐条检查
+
+### 设计单节课时的产出
+
+| 文件 | 格式 | 内容 |
+|---|---|---|
+| **教师教案** | .docx | 课程信息、目标、逐分钟流程、话术、材料、AI 使用、应急预案。教师工具包（答案、材料表、打印清单、压缩方案）整合在教案末尾 |
+| **课堂课件** | .pptx | 10-16 页手绘漫画风 PPT，逐页含画面构图、手绘元素、教师备注 |
+| **学生物料包** | .docx | 根据课程进度挑选留痕卡片：前期侧重问题发现，后期侧重解决和复盘 |
+| **模拟数据卡片** | .pdf | 实验模拟数据，供教师在学生无差异或时间不足时参考 |
+
+### 学生物料库（20 种）
+
+根据课程进度动态挑选：前期课时（第 1-3 课）每课 4-6 张卡片侧重问题发现，中期（第 4-8 课）每课 3-5 张侧重方案设计，中后期（第 9-12 课）每课 2-4 张侧重实验数据，后期（第 13-16 课）每课 2-3 张侧重结论和复盘。
+
+| 编号 | 名称 | 用途 |
+|---|---|---|
+| S01 | 任务委托书 | 明确真实情境、需求、约束和完成证据 |
+| S02 | 事实/猜测/证据卡 | 区分观察到的事实、猜测和证据来源 |
+| S03 | 共情地图 | 捕捉使用者看到、听到、说做、想感受 |
+| S04 | 观察放大镜 | 记录形状、颜色、数量、尺寸、变化 |
+| S05 | 问题漏斗与 HMW | 从宽问题缩小到可测研究问题 |
+| S06 | 资料与来源核验卡 | 评估来源可信度，追溯原始证据 |
+| S07 | AI 协作核验单 | 记录 AI 建议、核验方法、最终取舍 |
+| S08 | 假设与预测 | 提出可验证假设和预期数据表现 |
+| S09 | 变量与公平测试桌垫 | 识别自变量、因变量、控制变量、对照和重复 |
+| S10 | 实验/测试方案蓝图 | 写明材料、步骤、测量、分工和安全检查 |
+| S11 | 原始数据表 | 定制表头，记录原始值，不预填结果 |
+| S12 | 失败侦探单 | 记录失败事实、可能原因、证据和下一版改进 |
+| S13 | 创意八格 | 5-8 分钟内每格一种方案，快速发散 |
+| S14 | 方案选择矩阵 | 按标准评分，不事后改权重 |
+| S15 | 用户旅程/操作流程 | 分析使用者在各阶段的困难和改进机会 |
+| S16 | 同伴反馈单 | 基于证据的有效之处、疑问和建议 |
+| S17 | 结论阶梯 | 区分数据支持、合理推测和未知限制 |
+| S18 | 个人贡献页 | 记录每人负责的任务、判断和修改 |
+| S19 | 展品标签 | 写明问题、证据、结论和观众互动 |
+| S20 | 退出条 | 2-3 题快速检测本课掌握程度 |
+
+## 设计原则
+
+1. **一个主题贯穿全程** — 前期实验为最终项目提供现象、方法和数据基础
+2. **研究方法是主角** — 每节课至少显性训练一种研究方法
+3. **AI 是学伴，不是答案机器** — 学生必须核验 AI 建议，保留判断和取舍记录
+4. **先小实验，再完整研究** — 前 20% 建立现象，中间 55% 训练方法，最后 25% 完成闭环
+5. **研究问题必须可完成** — 课程周期内能观察到变化，学生可亲手操作
+6. **每节课留下可见痕迹** — 实体产出优先，数字成果需打印或装订
+7. **结营成果必须外化** — 每人带走实物，每组完成项目，班级可展示
+
+
+## 快速开始
+本项目的ZIP遵循 [Agent Skills 开放规范](https://cloud.tencent.com/document/product/1759/134602)，可用于支持Agent Skill的平台。按照以下三步即可开始使用。
+
+1. 下载已经打包好的文件[`dist/IBL-course-designer.zip`](dist/IBL-course-designer.zip)。
+
+2. 在你的Agent平台中（如Workbuddy、Qoder等），进入Skill、能力扩展或知识与工具配置页面，上传IBL-course-designer.zip。不同平台的菜单名称和操作方式可能略有不同，请以对应平台的说明为准。如果你使用的是自建的CLI + 大模型API，可以将解压后的Skill文件夹放入项目的Skills目录，并在Agent配置、系统提示词或启动参数中明确指定Skill的路径和加载方式。
+
+3. 向Agent描述你的初步课程想法即可，例如：
+> 我想给五年级学生设计一门种子萌发研究课。
+
+> 我想设计一个ESP32智能农场项目，面向六年级学生，共16课时。
+
+> 我想做一个冰箱食材追踪项目，让学生学习传感器、数据记录和AI图像识别。
+
+Skill会继续与你确认学生年龄、课时数量、教学目标、设备材料、班级人数和最终成果等关键信息，然后先生成课程框架。框架确认后，再生成完整教案和配套教学物料。
+
+
+## 开发与测试
 
 ```powershell
+# 校验 Skill 源目录
 python scripts/validate_skill.py --source .
+
+# 运行离线测试
 python -m unittest discover -s tests -v
-```
 
-校验内容包括：
-
-- 包根目录存在且只有一个 `SKILL.md`；
-- Frontmatter 是可解析的受限 YAML，且 `name`、`description` 和 SemVer 合规；
-- 文件总数不超过 300、大小不超过 10 MB；
-- 所有打包文件是 UTF-8 文本；
-- 无二进制、嵌套压缩包、重复路径或路径穿越。
-
-## 2. 打包 Skill
-
-```powershell
+# 打包并校验 ZIP
 python scripts/package_skill.py
 python scripts/validate_skill.py --zip dist/IBL-course-designer.zip
 ```
 
-输出固定为 `dist/IBL-course-designer.zip`。打包按路径排序并使用固定时间戳；输入不变时 SHA-256 不变。
+## License
 
-只上传 `dist/IBL-course-designer.zip`。根目录原有的 `IBL-course-designer.zip` 是 1.0.0 旧包，Frontmatter 不符合当前 ADP 规范，保留它仅为避免擅自覆盖原始文件，不得上传。
-
-查看 ZIP 内容：
-
-```powershell
-python -c "import zipfile; print('\n'.join(zipfile.ZipFile('dist/IBL-course-designer.zip').namelist()))"
-```
-
-## 3. 准备配置
-
-Windows PowerShell：
-
-```powershell
-Copy-Item .env.example .env
-```
-
-Linux/macOS：
-
-```sh
-cp .env.example .env
-chmod 600 .env
-```
-
-填写非敏感资源名称、`ADP_MODEL_ID`、`ADP_SKILL_ID` 和域名路径。开发机可用 `--env-file .env` 载入；生产环境应由 CI/CD 或 Secret Manager 直接注入 `TENCENTCLOUD_SECRET_ID`、`TENCENTCLOUD_SECRET_KEY` 和临时令牌，不把真实 Secret 写入任何仓库文件。
-
-先按 `docs/manual-steps.md` 完成实名认证、ADP 开通、Skill 控制台上传、模型选择、企业微信认证、备案和微信客服账号创建。
-
-## 4. 生成 ADP 变更计划
-
-以下命令完全离线，不访问腾讯云：
-
-```powershell
-python scripts/adp_client.py --env-file .env plan
-```
-
-计划写入 `.state/adp-plan.json`，显示操作、阻塞项和批准哈希。若 `ADP_MODEL_ID` 或 Skill 上传结果缺失，计划会列出阻塞项，`apply` 会拒绝执行。
-
-## 5. 经批准后创建或复用 ADP 资源
-
-先人工审核计划。以下命令会创建或修改线上资源，本项目不会代为运行。将 `<PLAN_HASH>` 替换为刚审核计划中的哈希：
-
-```powershell
-python scripts/adp_client.py --env-file .env apply --approve <PLAN_HASH>
-```
-
-客户端按顺序执行：
-
-1. 使用 `ADP_SPACE_ID`，或按精确名称查询并创建空间；
-2. 精确查询并复用/创建 `AppMode=4` 的 Claw 应用；
-3. 验证 `ADP_MODEL_ID` 在 `ModelScene=18` 可用；
-4. 使用 `ADP_SKILL_ID`，或查询/创建 Skill；
-5. 复用/创建专管主 Agent，对齐指令、模型、唯一 Skill、空工具/插件和推理轮数；
-6. 仅当本次新建或配置发生变化时发布；
-7. 创建或复用一个 API 测试会话。
-
-主 Agent 是本项目专管资源：客户端会清空已有工具和插件，并把 Skill 列表收敛为当前指定版本的 `ibl-course-designer`，避免遗留能力越权。若 Skill ID、版本、安全分析状态或 Agent 主角色不符合计划，客户端停止而不是猜测。
-
-幂等策略：创建前查询；精确同名超过一个时停止；优先使用 `.state/adp-state.json` 的资源 ID；修改只发送有差异的字段；不因网络超时或可疑 HTTP 5xx 自动重试创建请求；发布哈希未被确认成功时会对账上次 Release；重复运行且已确认发布时不重复发布。状态文件不保存 AppKey、Secret 或 Skill 文件 URL。审批计划同时绑定管理端点、聊天端点、状态文件路径指纹、调用身份指纹、Agent 指令、Skill 文件 URL 指纹和验收文件指纹，配置变化后旧哈希立即失效。计划时应已注入调用身份；使用轮换的临时凭证时设置稳定的 `ADP_ACCOUNT_FINGERPRINT`，避免只因临时 SecretId 变化而重复审批。
-
-只读检查：
-
-```powershell
-python scripts/adp_client.py --env-file .env status
-```
-
-若 `CreateRelease` 已送达但响应丢失，客户端会保留“不确定发布”标记并拒绝重复创建。先在 ADP 控制台确认对应 Release ID，再用已批准计划对账并轮询；不要猜测 ID：
-
-```powershell
-python scripts/adp_client.py --env-file .env reconcile-release --approve <PLAN_HASH> --release-id <REVIEWED_RELEASE_ID>
-```
-
-## 6. API 会话和验收测试
-
-发送一条无个人信息的测试消息：
-
-```powershell
-python scripts/adp_client.py --env-file .env test --approve <PLAN_HASH> --message "我想做一个种子主题课程"
-```
-
-运行 `config/acceptance-cases.json` 的微信多轮验收：
-
-```powershell
-python scripts/adp_client.py --env-file .env acceptance --approve <PLAN_HASH>
-```
-
-测试会话按稳定 `UserId` 查询并复用，避免重复创建。ADP 当前不支持 Claw 会话重置；重复验收会沿用历史上下文。如果需要完全隔离的验收，先在控制台批准新的测试用户策略，再修改用例 `user_id` 并重新生成计划。
-
-`--verbose` 只打印经过脱敏的请求和 `RequestId`，仍不建议在含真实教师/学生信息的会话中启用。用法是把全局参数放在子命令前：
-
-```powershell
-python scripts/adp_client.py --verbose --env-file .env status
-```
-
-## 7. 渲染和检查 Nginx
-
-本地只渲染，不部署：
-
-```powershell
-python ops/render_nginx.py --env-file .env --output .state/ibl-course-designer.conf
-```
-
-模板提供：
-
-- `/cgi-bin/` 原 URI 转发至 `qyapi.weixin.qq.com`；
-- `/online/channel/callback/` 原 URI 转发至 `chan.lke.cloud.tencent.com`；
-- 80 到 443 跳转、TLS 1.2/1.3、SNI；
-- 域名、服务证书、上游 CA 证书和访问日志路径来自环境变量；
-- 对两个腾讯上游启用证书链和主机名验证；
-- 安全访问日志只记录 `$uri`，不记录查询串或 Referer；由于 Nginx 错误日志可能包含完整请求查询串，该虚拟主机禁用错误日志。
-
-服务器上先做无变更检查：
-
-```sh
-ENV_FILE=/secure/path/ibl.env sh ops/check.sh
-ENV_FILE=/secure/path/ibl.env sh ops/check.sh --server
-```
-
-脚本默认调用 `python3`；若命令名不同，通过 `PYTHON_BIN` 覆盖，例如 `PYTHON_BIN=python`。
-
-`--server` 会执行 `nginx -t`，但不重载。`--remote` 会访问公网两个代理路径，仅确认收到 HTTP 响应，不携带企业凭证：
-
-```sh
-ENV_FILE=/secure/path/ibl.env sh ops/check.sh --remote
-```
-
-## 8. 部署、备份和回滚
-
-脚本不使用 SSH 或 `sudo`，应在已经进入且有相应权限的服务器会话中运行。所有变更脚本默认只显示计划和批准哈希。
-
-部署计划：
-
-```sh
-ENV_FILE=/secure/path/ibl.env sh ops/deploy.sh
-```
-
-审核后应用：
-
-```sh
-ENV_FILE=/secure/path/ibl.env sh ops/deploy.sh --apply --approve <DEPLOY_HASH>
-```
-
-部署会备份现有配置、安装新配置、执行 `nginx -t`，成功后才 `nginx -s reload`；测试失败会恢复旧配置且不重载。
-
-独立备份：
-
-```sh
-sh ops/backup.sh
-sh ops/backup.sh --apply --approve <BACKUP_HASH>
-```
-
-回滚计划和应用：
-
-```sh
-sh ops/rollback.sh
-sh ops/rollback.sh --apply --approve <ROLLBACK_HASH>
-```
-
-也可以显式选择备份：
-
-```sh
-sh ops/rollback.sh --backup /var/backups/ibl-course-designer/ibl-course-designer.conf.TIMESTAMP
-```
-
-## 9. 微信客服上线
-
-API 客户端不创建微信渠道，因为公开 ADP API 没有渠道 CRUD 接口。按 `docs/manual-steps.md` 在 ADP 和微信客服后台手工配置企业 ID、Secret、URL、Token、EncodingAESKey，完成扫码和管理员授权，再发布微信客服渠道并扫码验收。
-
-## 安全边界
-
-- 不提交 `.env`、`.state/`、证书、私钥、控制台截图或真实 Secret；
-- 不把 `ADP_SKILL_FILE_URL`、AppKey、回调密钥或 access token 写入日志；
-- 管理 API 和聊天 API 只允许腾讯官方端点，端点变化必须重新生成批准计划；
-- 不自动执行 SSH、`sudo`、删除、云端 apply、发布、Nginx reload 或回滚；
-- 创建请求发生不确定超时时不直接重试，重新运行 `apply` 先做资源对账；
-- Nginx 保留完整 URI 和查询串用于代理，但访问日志主动丢弃查询串；
-- 验收数据只使用合成内容，不输入教师、学生或学校个人信息。
-
-## 规范与限制
-
-- ADP Skill ZIP 最大 10 MB、300 个有效文件，且只能包含纯文本；
-- `SKILL.md` 必须位于 ZIP 根目录，Frontmatter 的 `name` 只能含小写字母、数字和单连字符；
-- `CreateSkill` 需要平台可访问的 `FileUrl`，不能直接传本地 ZIP；
-- ADP 创建接口没有公开的客户端幂等键，因此本项目使用查询、精确匹配、本地状态和“歧义停止”实现安全重入；
-- 微信客服渠道、主体认证、备案、扫码和管理员授权必须手工完成。
+[MIT](LICENSE)
