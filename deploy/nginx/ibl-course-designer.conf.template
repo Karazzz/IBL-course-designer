@@ -1,0 +1,80 @@
+# Render with: python3 ops/render_nginx.py --template deploy/nginx/ibl-course-designer.conf.template
+# Query strings are deliberately excluded from access logs because /cgi-bin/
+# requests can contain access tokens and callback requests contain signatures.
+log_format ibl_adp_safe '$remote_addr - $remote_user [$time_local] '
+                        '"$request_method $uri $server_protocol" $status $body_bytes_sent '
+                        '"$http_user_agent"';
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name {{PUBLIC_DOMAIN}};
+
+    access_log {{NGINX_ACCESS_LOG}} ibl_adp_safe;
+    error_log /dev/null crit;
+
+    return 308 https://{{PUBLIC_DOMAIN}}$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name {{PUBLIC_DOMAIN}};
+
+    ssl_certificate {{TLS_CERT_PATH}};
+    ssl_certificate_key {{TLS_KEY_PATH}};
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_session_cache shared:IBL_ADP_SSL:10m;
+    ssl_session_timeout 1d;
+    ssl_session_tickets off;
+
+    access_log {{NGINX_ACCESS_LOG}} ibl_adp_safe;
+    # Nginx error logs can include the full query string. Disable this vhost's
+    # error log rather than risk recording WeCom access tokens or signatures.
+    error_log /dev/null crit;
+
+    add_header Strict-Transport-Security "max-age=31536000" always;
+    client_max_body_size 10m;
+
+    location ^~ /cgi-bin/ {
+        proxy_pass https://qyapi.weixin.qq.com;
+        proxy_http_version 1.1;
+        proxy_set_header Host qyapi.weixin.qq.com;
+        proxy_set_header Connection "close";
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_ssl_server_name on;
+        proxy_ssl_name qyapi.weixin.qq.com;
+        proxy_ssl_verify on;
+        proxy_ssl_trusted_certificate {{PROXY_CA_CERT_PATH}};
+        proxy_ssl_verify_depth 3;
+        proxy_buffering off;
+        proxy_request_buffering off;
+        proxy_read_timeout 600s;
+        proxy_send_timeout 600s;
+    }
+
+    location ^~ /online/channel/callback/ {
+        proxy_pass https://chan.lke.cloud.tencent.com;
+        proxy_http_version 1.1;
+        proxy_set_header Host chan.lke.cloud.tencent.com;
+        proxy_set_header Connection "close";
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_ssl_server_name on;
+        proxy_ssl_name chan.lke.cloud.tencent.com;
+        proxy_ssl_verify on;
+        proxy_ssl_trusted_certificate {{PROXY_CA_CERT_PATH}};
+        proxy_ssl_verify_depth 3;
+        proxy_buffering off;
+        proxy_request_buffering off;
+        proxy_read_timeout 600s;
+        proxy_send_timeout 600s;
+    }
+
+    location / {
+        return 404;
+    }
+}

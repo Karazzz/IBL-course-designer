@@ -1,0 +1,10 @@
+.env
+.env.*
+!.env.example
+.state/
+backups/
+__pycache__/
+*.py[cod]
+*.log
+*.tmp
+*.bak
