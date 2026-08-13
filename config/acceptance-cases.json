@@ -17,13 +17,13 @@
         },
         {
           "message": "五年级，20人，每组4人，90分钟，普通科学教室，有放大镜，想研究水量对种子萌发的影响。",
-          "must_contain_all": ["待确认框架", "留痕", "PPT"],
+          "must_contain_all": ["检索与设计依据", "http", "待确认框架", "留痕", "PPT", "前后测"],
           "must_contain_any": ["是否确认", "框架是否确认"],
           "max_question_marks": 2
         },
         {
           "message": "确认，按这个框架生成完整内容。",
-          "must_contain_all": ["教师教案", "学生物料"],
+          "must_contain_all": ["检索与设计依据", "教师教案", "学生物料", "前测", "后测"],
           "must_contain_any": ["课堂课件", "PPT"],
           "must_not_contain": ["请输入真实姓名"]
         }
@@ -35,7 +35,7 @@
       "turns": [
         {
           "message": "我要设计整套课程：六年级，16次课，每次90分钟，主题是校园水质，24人，4人一组，有基础水质检测工具。",
-          "must_contain_all": ["待确认框架", "模块", "主问题"],
+          "must_contain_all": ["检索与设计依据", "http", "待确认框架", "模块", "主问题", "前后测"],
           "must_contain_any": ["是否确认", "框架是否确认"],
           "must_not_contain": ["01-教师教案.docx"],
           "max_question_marks": 2

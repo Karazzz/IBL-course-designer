@@ -46,7 +46,7 @@ def settings(**overrides) -> Settings:
         "skill_id": "skill-test-id",
         "skill_name": "ibl-course-designer",
         "skill_file_url": "",
-        "skill_version": "2.0.0",
+        "skill_version": "2.1.0",
         "user_id": "test-user",
         "instructions_path": ROOT / "config" / "agent-instructions.txt",
         "acceptance_path": ROOT / "config" / "acceptance-cases.json",

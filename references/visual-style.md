@@ -21,8 +21,28 @@
 - 避免通用商务模板、渐变霓虹、玻璃拟态、满页圆角卡片和无意义装饰；
 - 一页一个动作或判断，屏幕正文通常不超过 45 个汉字；
 - 关键操作优先用编号图解或步骤分解，而不是段落；
+- 文本逻辑页最多 3 个要点，每个要点尽量不超过 24 个汉字；
 - 低年级正文至少 28pt，高年级至少 24pt；标题通常 36-48pt；
 - 保留足够留白，投影后排可读。
+
+## 累积构建页
+
+需要按顺序讲解的要点、步骤、因果链和答案，使用多个物理页面逐步呈现，不依赖播放器动画。
+
+```text
+逻辑页：1、2、3
+实际页 1：1
+实际页 2：1、2
+实际页 3：1、2、3
+```
+
+- 每张实际页只新增一个有意义的信息单元；
+- 标题、已有内容、坐标和字号不移动；
+- 当前新增项可用加粗、边框和文字共同强调，不只靠颜色；
+- 最后一页保留完整状态用于总结；
+- 框架同时报告逻辑页数和实际展示页数；
+- 讲义/打印版每个构建组只保留最终页，防止重复浪费纸张；
+- 封面、完整数据表、活动计时页等无需按项目构建的页面可保持单页。
 
 ## PPT 母版建议
 
@@ -85,4 +105,12 @@
 - 对比度可读，不用颜色作为唯一提示；
 - 图片和形状不遮挡操作步骤；
 - PPT 页面与教案环节、物料编号一致；
+- 累积构建页除新增内容外没有位置漂移，最终状态信息完整；
 - 移除模板残留文字、旧备注、作者个人信息和外部链接。
+
+## 设计依据
+
+- Microsoft 将逐段出现称为 build slide，并说明可由教师点击控制呈现顺序：https://support.microsoft.com/en-us/office/animate-or-make-words-appear-one-line-at-a-time-cfb5ebdc-90cf-4324-8933-874c7c840175
+- UC San Diego 的循证演示建议强调少量要点、讨论时再引入对象和减少装饰：https://multimedia.ucsd.edu/best-practices/presentation-design.html
+- Baylor 的课堂演示建议支持每页较少要点、简短文字和以问题组织课堂：https://atl.web.baylor.edu/teaching-guides/teaching-techniques/effective-powerpoint
+- Microsoft 无障碍指南用于检查标题、阅读顺序、字号、对比度和非颜色提示：https://support.microsoft.com/en-us/office/make-your-powerpoint-presentations-accessible-to-people-with-disabilities-6f7772b2-2f33-4bd2-8ca7-dae3b2b3ef25

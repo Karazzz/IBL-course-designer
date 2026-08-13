@@ -22,9 +22,13 @@ class SkillValidationTests(unittest.TestCase):
     def test_repository_skill_source_is_valid(self) -> None:
         metadata, files = validate_source(ROOT)
         self.assertEqual(metadata["name"], "ibl-course-designer")
-        self.assertEqual(metadata["metadata"]["version"], "2.0.0")
+        self.assertEqual(metadata["metadata"]["version"], "2.1.0")
         self.assertEqual(files[0][1], PurePosixPath("SKILL.md"))
-        self.assertTrue(all(path.suffix.lower() == ".md" for path, _ in files))
+        packaged = {relative.as_posix() for _, relative in files}
+        self.assertIn("references/assessment.md", packaged)
+        self.assertIn("references/research-evidence.md", packaged)
+        self.assertIn("tools/render_office.py", packaged)
+        self.assertIn("tools/example-kit.json", packaged)
 
     def test_missing_root_skill_is_rejected(self) -> None:
         with self.assertRaisesRegex(ValidationError, "exactly one SKILL.md"):

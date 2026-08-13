@@ -278,7 +278,7 @@ class Settings:
             skill_id=get_env("ADP_SKILL_ID"),
             skill_name=get_env("ADP_SKILL_NAME", "ibl-course-designer"),
             skill_file_url=get_env("ADP_SKILL_FILE_URL"),
-            skill_version=get_env("ADP_SKILL_VERSION", "2.0.0"),
+            skill_version=get_env("ADP_SKILL_VERSION", "2.1.0"),
             user_id=get_env("ADP_TEST_USER_ID", "ibl-course-designer-acceptance"),
             instructions_path=Path(
                 get_env("ADP_AGENT_INSTRUCTIONS_FILE", "config/agent-instructions.txt")

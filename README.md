@@ -4,9 +4,9 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 ![Python 3.10+](https://img.shields.io/badge/Python-3.10+-3776AB.svg)
-![ZIP ~17KB](https://img.shields.io/badge/ZIP-~17KB-brightgreen.svg)
+![ZIP <10MB](https://img.shields.io/badge/ZIP-%3C10MB-brightgreen.svg)
 ![Platform](https://img.shields.io/badge/Platform-ADP_Claw-0083FE.svg)
-![Version](https://img.shields.io/badge/Version-2.0.1-0BB8B8.svg)
+![Version](https://img.shields.io/badge/Version-2.1.0-0BB8B8.svg)
 
 ---
 
@@ -35,9 +35,9 @@ IBL Course Designer是一个面向中小学教师的AI x 研究性学习（Inqui
 </p>
 
 <p align="center">
-  <img src="docs/images/demo-ppt.png" width="600" alt="手绘漫画风 PPT 示例" />
+  <img src="docs/images/demo-ppt.png" width="600" alt="课堂 PPT 示例" />
   <br />
-  <sub>当节课 PPT：手绘漫画风、对话气泡、计时挑战页、AI 核验提示</sub>
+  <sub>当节课 PPT：内容简洁、要点逐步呈现、教师备注和 AI 核验提示</sub>
 </p>
 
 <p align="center">
@@ -51,7 +51,7 @@ IBL Course Designer是一个面向中小学教师的AI x 研究性学习（Inqui
 
 ### 先搜索，再设计
 
-在生成任何课程内容之前，自动搜索课标、已有课程案例、真实实验数据、材料规格和已有物料模板。确保课程有据可查，教师可以据此判断设计是否靠谱。
+在生成任何课程内容之前，自动搜索课标、已有课程案例、真实实验数据、材料规格和已有物料模板。待确认框架会直接展示完整网址、发布方、关键信息、采用方式和限制；完整套件另附检索与设计依据文件。
 
 ### 设计整套课程时的产出
 
@@ -64,16 +64,23 @@ IBL Course Designer是一个面向中小学教师的AI x 研究性学习（Inqui
 7. **材料与设备清单** — 公共设备、每组材料、逐节消耗品、数量公式、替代方案
 8. **课前准备时间线** — 开课前 2-4 周到结营展示
 9. **实施保障** — 设备排队、无障碍、低网络、缺席补做方案
-10. **课程质量自检** — 10 项逐条检查
+10. **前后测** — 各约 20 题，A-D 选项按理解程度赋 1-4 分并报告成长
+11. **课程质量自检** — 逐条检查
 
 ### 设计单节课时的产出
 
 | 文件 | 格式 | 内容 |
 |---|---|---|
-| **教师教案** | .docx | 课程信息、目标、逐分钟流程、话术、材料、AI 使用、应急预案。教师工具包（答案、材料表、打印清单、压缩方案）整合在教案末尾 |
-| **课堂课件** | .pptx | 10-16 页手绘漫画风 PPT，逐页含画面构图、手绘元素、教师备注 |
-| **学生物料包** | .docx | 根据课程进度挑选留痕卡片：前期侧重问题发现，后期侧重解决和复盘 |
+| **检索与设计依据** | .pdf/.docx | 完整来源、网址、摘要、采用方式、许可和待核实项 |
+| **教师教案** | .pdf/.docx | 课程信息、目标、逐分钟流程、话术、材料、AI 使用、前后测评分和应急预案 |
+| **课堂课件** | .pptx | 每页内容简洁；多要点自动展开为 `1 → 1+2 → 1+2+3` 累积展示页 |
+| **学生物料包** | A4 .pdf/.docx | 一个环节一页，根据课程进度挑选留痕卡片 |
+| **前后测** | .pdf/.docx | 前后测各约 20 题，学生卷隐藏权重，教师版解释每个选项的 1-4 分 |
 | **模拟数据卡片** | .pdf | 实验模拟数据，供教师在学生无差异或时间不足时参考 |
+
+### 原生 Office 生成
+
+Skill 内置 `tools/render_office.py`。模型只输出紧凑 JSON，脚本使用 `python-pptx` 和 `python-docx` 生成原生 PPTX/DOCX，统一处理页面、字体、表格、备注和累积构建页，不需要每次让模型重新编写转换代码。可选用 LibreOffice 把 DOCX 转成 PDF。
 
 ### 学生物料库（20 种）
 
@@ -135,6 +142,10 @@ Skill会继续与你确认学生年龄、课时数量、教学目标、设备材
 ```powershell
 # 校验 Skill 源目录
 python scripts/validate_skill.py --source .
+
+# 安装并试运行原生 Office 生成器
+python -m pip install -r tools/requirements.txt
+python tools/render_office.py tools/example-kit.json --output-dir output
 
 # 运行离线测试
 python -m unittest discover -s tests -v

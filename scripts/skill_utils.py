@@ -13,7 +13,7 @@ from typing import Any, Iterable
 MAX_PACKAGE_BYTES = 10 * 1024 * 1024
 MAX_PACKAGE_FILES = 300
 MAX_SKILL_LINES = 500
-PACKAGE_DIRS = ("references",)
+PACKAGE_DIRS = ("references", "tools")
 IGNORED_NAMES = {
     ".DS_Store",
     "Thumbs.db",
