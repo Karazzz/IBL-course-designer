@@ -31,19 +31,19 @@ IBL Course Designer是一个面向中小学教师的AI x 研究性学习（Inqui
 <p align="center">
   <img src="docs/images/demo-conversation.png" width="600" alt="教师对话示例" />
   <br />
-  <sub>教师对话 → 框架确认 → 生成完整教案、PPT 和学生物料</sub>
+  <sub>教师对话 → 框架确认 → 生成完整教案、PPT和学生物料</sub>
 </p>
 
 <p align="center">
   <img src="docs/images/demo-ppt.png" width="600" alt="课堂 PPT 示例" />
   <br />
-  <sub>当节课 PPT：内容简洁、要点逐步呈现、教师备注和 AI 核验提示</sub>
+  <sub>当节课PPT：内容简洁、要点逐步呈现、教师备注</sub>
 </p>
 
 <p align="center">
   <img src="docs/images/demo-materials.png" width="600" alt="学生物料示例" />
   <br />
-  <sub>部分学生留痕物料：共情地图、变量桌垫、AI 核验单、失败侦探单</sub>
+  <sub>学生正在课上填写留痕物料</sub>
 </p>
 
 
