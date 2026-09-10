@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "project_state.schema.json",
+  "title": "project_state",
+  "description": "课程项目的跨轮次状态：项目版本、各产物版本与确认状态、已完成内容、待确认事项。",
+  "type": "object",
+  "required": ["project_id", "version", "artifacts"],
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "项目唯一标识。"
+    },
+    "version": {
+      "type": "string",
+      "description": "项目状态版本，每次更新递增。"
+    },
+    "artifacts": {
+      "type": "object",
+      "description": "各产物的当前版本与确认状态。",
+      "properties": {
+        "course_spec": {
+          "type": "object",
+          "properties": {
+            "current_version": { "type": "string" },
+            "status": { "enum": ["not_created", "draft", "confirmed"] }
+          }
+        },
+        "lesson_specs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["lesson_id", "current_version", "status"],
+            "properties": {
+              "lesson_id": { "type": "string" },
+              "current_version": { "type": "string" },
+              "status": { "enum": ["draft", "confirmed"] }
+            }
+          }
+        },
+        "ppt_briefs": {
+          "type": "array",
+          "description": "ppt_brief 与来源的版本关系，用于判断源更新后是否需要重新派生。",
+          "items": {
+            "type": "object",
+            "required": ["brief_id", "source_type", "source_id", "source_version"],
+            "properties": {
+              "brief_id": { "type": "string" },
+              "source_type": { "enum": ["course_spec", "lesson_spec"] },
+              "source_id": { "type": "string" },
+              "source_version": { "type": "string", "description": "生成该 brief 时依据的源版本。" }
+            }
+          }
+        }
+      }
+    },
+    "completed": {
+      "type": "array",
+      "description": "已完成并经用户确认的内容摘要。",
+      "items": { "type": "string" }
+    },
+    "pending_confirmations": {
+      "type": "array",
+      "description": "等待用户确认的事项。",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}

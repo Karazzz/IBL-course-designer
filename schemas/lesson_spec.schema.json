@@ -1,0 +1,167 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lesson_spec.schema.json",
+  "title": "Lesson Spec",
+  "type": "object",
+  "required": [
+    "lesson",
+    "research_question",
+    "core_task",
+    "flow",
+    "assessment",
+    "resources"
+  ],
+  "properties": {
+    "lesson": {
+      "type": "object",
+      "required": ["title", "duration_min"],
+      "properties": {
+        "title": { "type": "string" },
+        "module": { "type": "string" },
+        "lesson_no": { "type": "integer", "minimum": 1 },
+        "duration_min": { "type": "integer", "minimum": 1 },
+        "prior_learning": { "type": "string" },
+        "course_spec_ref": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+
+    "research_question": {
+      "type": "string"
+    },
+
+    "core_task": {
+      "type": "object",
+      "required": ["task", "student_choices"],
+      "properties": {
+        "task": { "type": "string" },
+        "student_choices": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" }
+        },
+        "expected_output": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+
+    "flow": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["minutes", "student_activity"],
+        "properties": {
+          "minutes": { "type": "integer", "minimum": 1 },
+          "student_activity": { "type": "string" },
+          "teacher_support": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+
+    "evidence_cards": {
+      "type": "array",
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "S01",
+          "S02",
+          "S03",
+          "S04",
+          "S05",
+          "S06",
+          "S07",
+          "S08",
+          "S09",
+          "S10"
+        ]
+      }
+    },
+
+    "assessment": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 6,
+      "items": { "type": "string" }
+    },
+
+    "resources": {
+      "type": "object",
+      "properties": {
+        "per_group": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "shared": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "teacher_prep": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "media": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "differentiation": {
+      "type": "object",
+      "properties": {
+        "support": { "type": "string" },
+        "challenge": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+
+    "standards": {
+      "type": "object",
+      "properties": {
+        "referenced": { "type": "boolean" },
+        "source": { "type": "string" },
+        "note": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+
+    "assumptions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+
+    "research_anchor": {
+      "type": "object",
+      "description": "本课研究问题的检索锚点：检索关键词与采用的来源文献；有 course_spec 时摘录与本课相关的来源，无 course_spec 时为本课检索结果（渲染进 01 教案“一 研究问题”下方）",
+      "properties": {
+        "keywords": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["title"],
+            "properties": {
+              "title": { "type": "string" },
+              "year": { "type": "integer" },
+              "url": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "ppt_brief_ref": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

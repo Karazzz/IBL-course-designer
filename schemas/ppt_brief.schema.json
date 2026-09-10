@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ppt_brief.schema.json",
+  "title": "PPT Brief",
+  "type": "object",
+  "required": ["slides"],
+  "properties": {
+    "lesson_spec_ref": {
+      "type": "string",
+      "description": "来源课节标识（course/lesson id + 版本），封面标题缺省取此值"
+    },
+    "subtitle": {
+      "type": "string",
+      "description": "课程级副标题，封面副标题缺省取此值"
+    },
+    "slides": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["topic", "teacher_action"],
+        "properties": {
+          "topic": {
+            "type": "string",
+            "description": "本页教学主题，渲染为页面标题（章节标题）"
+          },
+          "subtitle": {
+            "type": "string",
+            "description": "本页副标题/导语（points 版右栏导语、columns 版横幅、quote 版中部小结）"
+          },
+          "layout": {
+            "enum": ["cover", "points", "image", "quote", "rows", "cards", "columns"],
+            "description": "可选版式提示；缺省时渲染器按媒体/要点结构自动选择"
+          },
+          "points": {
+            "type": "array",
+            "maxItems": 4,
+            "description": "结构化要点。points 版/rows 版：第 1 条进主面板，第 2–4 条进右侧三行；cards/columns 版取前 3 条",
+            "items": {
+              "type": "object",
+              "minProperties": 1,
+              "properties": {
+                "title": { "type": "string" },
+                "detail": { "type": "string" },
+                "badge": {
+                  "type": "string",
+                  "description": "cards 版圆形徽标短标签（≤4 字），缺省按 01/02/03 编号"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "content": {
+            "type": "string",
+            "description": "整段文本；未提供 points 时由渲染器按行和句读切分为要点"
+          },
+          "media": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "enum": ["none", "image", "video"],
+                "description": "image/video 时自动选用 image 版式，本 skill 不生成真实图片，占位符留空待插入"
+              },
+              "description": {
+                "type": "string",
+                "description": "需要呈现的媒体内容描述，渲染为图片说明占位"
+              }
+            },
+            "additionalProperties": false
+          },
+          "teacher_action": {
+            "type": "string",
+            "description": "教师在本页的推进动作，渲染为演讲者备注（放映不可见）"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

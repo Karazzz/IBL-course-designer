@@ -1,0 +1,312 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Course Spec",
+  "type": "object",
+
+  "required": [
+    "theme",
+    "audience",
+    "duration",
+    "driving_question",
+    "objectives",
+    "modules",
+    "final_task",
+    "assessment"
+  ],
+
+  "properties": {
+    "scale": {
+      "type": "string",
+      "enum": ["course", "module"]
+    },
+
+    "theme": {
+      "type": "string",
+      "description": "课程主题"
+    },
+
+    "audience": {
+      "type": "object",
+      "required": ["grade"],
+      "properties": {
+        "grade": {
+          "type": "string",
+          "description": "年级或年龄段"
+        },
+        "class_size": {
+          "type": "integer"
+        },
+        "grouping": {
+          "type": "string"
+        }
+      }
+    },
+
+    "duration": {
+      "type": "object",
+      "required": ["total_lessons", "minutes_per_lesson"],
+      "properties": {
+        "total_lessons": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "minutes_per_lesson": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+
+    "driving_question": {
+      "type": "string",
+      "description": "贯穿整套课程的真实、可探究驱动问题"
+    },
+
+    "objectives": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "dimension", "objective"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "dimension": {
+            "type": "string",
+            "enum": [
+              "科学观念",
+              "科学思维",
+              "探究实践",
+              "态度责任",
+              "其他"
+            ]
+          },
+          "objective": {
+            "type": "string",
+            "description": "使用课标规范、可观察、可评价的目标表述"
+          }
+        }
+      }
+    },
+
+    "modules": {
+      "type": "array",
+      "description": "课程 Backbone",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "sub_question", "lessons"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "sub_question": {
+            "type": "string",
+            "description": "模块级子问题"
+          },
+          "core_knowledge": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "methods_skills": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "lessons": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "lesson",
+                "research_question",
+                "student_task"
+              ],
+              "properties": {
+                "lesson": {
+                  "type": "integer"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "research_question": {
+                  "type": "string",
+                  "description": "课时级可探究问题"
+                },
+                "student_task": {
+                  "type": "string",
+                  "description": "以学生动手实践为主体、足以支撑本课时的核心任务"
+                },
+                "objective_refs": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "final_task": {
+      "type": "object",
+      "description": "课程最后约25%课时完成的综合应用小闭环",
+      "required": [
+        "lesson_range",
+        "challenge",
+        "deliverable",
+        "closed_loop"
+      ],
+      "properties": {
+        "lesson_range": {
+          "type": "string",
+          "description": "例如 13-16"
+        },
+        "challenge": {
+          "type": "string",
+          "description": "学生最终需要解决的问题或挑战"
+        },
+        "deliverable": {
+          "type": "string",
+          "description": "最终实验、模型、装置或方案"
+        },
+        "applied_knowledge": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "closed_loop": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "问题或目标",
+            "方案设计",
+            "实施或制作",
+            "测试或收集证据",
+            "分析判断",
+            "改进或形成结论",
+            "表达成果"
+          ]
+        }
+      }
+    },
+
+    "assessment": {
+      "type": "object",
+      "required": ["pre_post_test"],
+      "properties": {
+        "pre_post_test": {
+          "type": "array",
+          "maxItems": 10,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "question",
+              "rubric",
+              "backbone_ref"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "question": {
+                "type": "string"
+              },
+              "rubric": {
+                "type": "string"
+              },
+              "backbone_ref": {
+                "type": "string",
+                "description": "对应 module/objective/core knowledge 节点"
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "resources": {
+      "type": "object",
+      "properties": {
+        "materials": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "equipment": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "space": {
+          "type": "string"
+        },
+        "budget": {
+          "type": "string"
+        },
+        "safety": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+
+    "b_level": {
+      "type": "integer"
+    },
+
+    "research_anchor": {
+      "type": "object",
+      "description": "OpenAlex 轻量检索锚点留痕：检索关键词与采用的来源文献（渲染进 00 课程大纲“四 课程驱动问题”下方）",
+      "properties": {
+        "keywords": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["title"],
+            "properties": {
+              "title": { "type": "string" },
+              "year": { "type": "integer" },
+              "url": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+
+    "open_questions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}
